@@ -1,0 +1,15 @@
+package com.richard.snakegame;
+
+import com.richard.snakegame.logic.SnakeGame;
+import com.richard.snakegame.view.SnakeFrame;
+
+import javax.swing.*;
+
+public class Main {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame snakeFrame = new SnakeFrame();
+            snakeFrame.setVisible(true);
+        });
+    }
+}
