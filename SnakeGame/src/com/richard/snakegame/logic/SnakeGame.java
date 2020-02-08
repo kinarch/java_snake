@@ -159,13 +159,6 @@ public class SnakeGame {
         //  is snake is out of world ?
         try {
             for (SnakeTail s : snake.getBody()) {
-                int x = s.getX();
-                int y = s.getY();
-                if (x >= NUMBER_X) x = 0;
-                if (x < 0) x = NUMBER_X - 1;
-                if (y >= NUMBER_Y) y = 0;
-                if (y < 0) y = NUMBER_Y - 1;
-                s.setPos(x, y);
                 world[s.getX()][s.getY()] = SNAKE;
             }
         } catch (IndexOutOfBoundsException e) {
@@ -242,16 +235,15 @@ public class SnakeGame {
         int midX = (int) (NUMBER_X / 2) - 1;
         int midY = (int) (NUMBER_Y / 2) - 1;
 
-        foods = new ArrayList<>();
-        snake = new Snake(midX, midY);
-        world = new int[NUMBER_X][NUMBER_Y];
         gameOver = false;
         numberOFEatenFood = 0;
         numberOfFood = 1;
         score = 0;
+        foods = new ArrayList<>();
+        snake = new Snake(midX, midY);
         generateFood();
-        setDirection(RIGHT);
         addGameObjects();
+        setDirection(RIGHT);
     }
 
     /**
@@ -265,6 +257,17 @@ public class SnakeGame {
 
         currentDirection = nextDirection;
         snake.move(currentDirection);
+
+        //  snake can pass the border
+        for (SnakeTail s : snake.getBody()) {
+            int x = s.getX();
+            int y = s.getY();
+            if (x >= NUMBER_X) x = 0;
+            if (x < 0) x = NUMBER_X - 1;
+            if (y >= NUMBER_Y) y = 0;
+            if (y < 0) y = NUMBER_Y - 1;
+            s.setPos(x, y);
+        }
 
         //  is snake eating his tail ?
         if (snake.isOnHisTail()) {
