@@ -29,7 +29,6 @@ public class SnakeFrame extends JFrame {
         setResizable(false);
         setUndecorated(false);
         setFocusable(true);
-        setBackground(Color.GREEN);
 
         //  #   PANE
         board = new JPanel();
@@ -65,6 +64,9 @@ public class SnakeFrame extends JFrame {
                     case KeyEvent.VK_UP:
                         direction = snakeGame.UP;
                         break;
+                    case KeyEvent.VK_SPACE:
+//                        snakeGame.pause();
+                        break;
                 }
 
                 if (direction != 0) {
@@ -81,11 +83,21 @@ public class SnakeFrame extends JFrame {
             }
         });
 
-//        Thread thread = new Thread(() -> {
+        Thread thread = new Thread(() -> {
+//            try {
+//                while (!snakeGame.isGameOver()) {
+//                    Thread.sleep(500);
+//                    //System.out.println("sleep");
+//                    snakeGame.update();
+//                    this.draw();
+//                }
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 //            while (!snakeGame.isGameOver()) {
 //                try {
 //                    Thread.sleep(200);
-//                    System.out.println("sleep");
+//                    //System.out.println("sleep");
 //                    snakeGame.update();
 //                    draw();
 //                } catch (InterruptedException e) {
@@ -93,8 +105,8 @@ public class SnakeFrame extends JFrame {
 //                    return;
 //                }
 //            }
-//        });
-//        thread.start();
+        });
+        thread.start();
 
     }
 
@@ -106,13 +118,12 @@ public class SnakeFrame extends JFrame {
 
         //  remove and draw...
         board.removeAll();
-        board.repaint();
+        board.repaint(1000);
 
         for (int x = 0; x < snakeWorld.length; x++) {
             for (int y = 0; y < snakeWorld[x].length; y++) {
                 if (snakeWorld[x][y] != 0) {
                     JLabel rect = new JLabel();
-                    rect.setOpaque(true);
                     rect.setSize(new Dimension(rectSize, rectSize));
                     rect.setBounds(x * rectSize, y * rectSize, rectSize, rectSize);
                     switch (snakeWorld[x][y]) {
@@ -123,6 +134,7 @@ public class SnakeFrame extends JFrame {
                             rect.setBackground(Color.CYAN);
                             break;
                     }
+                    rect.setOpaque(true);
                     board.add(rect);
                 }
             }

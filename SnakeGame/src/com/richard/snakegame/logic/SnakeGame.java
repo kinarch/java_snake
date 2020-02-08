@@ -23,6 +23,11 @@ public class SnakeGame {
     public final int NUMBER_Y = 20;
 
     /**
+     * The default points by eaten food
+     */
+    private final int DEFAULT_POINTS_BY_FOOD = 50;
+
+    /**
      * The int entity for the world
      */
     public final int EMPTY = 0;
@@ -70,6 +75,17 @@ public class SnakeGame {
     private boolean pause;
 
     /**
+     * the score is increasing after the snake eat food
+     */
+    private int score;
+
+    /**
+     * the number of eaten food by the snake
+     */
+    private int numberOFEatenFood;
+
+
+    /**
      * The constructor is private
      * To prevent the multi SnakeGame instance, it can be exist one instance by execution
      * This class can be instanciate only with the create() static method
@@ -81,7 +97,7 @@ public class SnakeGame {
     /**
      * The instance is true if the SnakeGame has been instanciated
      */
-    private static boolean instance = false;
+    public static SnakeGame instance;
 
 
     /**
@@ -91,9 +107,9 @@ public class SnakeGame {
      */
     public static SnakeGame create() {
 
-        if (!instance) {
-            instance = true;
-            return new SnakeGame();
+        if (instance == null) {
+            instance = new SnakeGame();
+            return instance;
         }
         return null;
     }
@@ -102,10 +118,14 @@ public class SnakeGame {
         return world;
     }
 
+    public int getScore() {
+        return score;
+    }
+
     //  =   =   =   GAME TOOLS
 
     /**
-     *
+     *  set the next direction of the snake
      */
     public void setDirection(int direction) {
         switch (direction) {
@@ -133,6 +153,7 @@ public class SnakeGame {
     }
 
     private void addGameObjects() {
+
         world = new int[NUMBER_X][NUMBER_Y];
 
         //  is snake is out of world ?
@@ -140,10 +161,10 @@ public class SnakeGame {
             for (SnakeTail s : snake.getBody()) {
                 int x = s.getX();
                 int y = s.getY();
-                if (s.getX() >= NUMBER_X) x = 0;
-                if (s.getX() < 0) x = NUMBER_X - 1;
-                if (s.getY() >= NUMBER_Y) y = 0;
-                if (s.getY() < 0) y = NUMBER_Y - 1;
+                if (x >= NUMBER_X) x = 0;
+                if (x < 0) x = NUMBER_X - 1;
+                if (y >= NUMBER_Y) y = 0;
+                if (y < 0) y = NUMBER_Y - 1;
                 s.setPos(x, y);
                 world[s.getX()][s.getY()] = SNAKE;
             }
@@ -170,6 +191,10 @@ public class SnakeGame {
             }
             System.out.println();
         }
+    }
+
+    private void increaseScore() {
+        score += DEFAULT_POINTS_BY_FOOD * numberOFEatenFood;
     }
 
     /**
@@ -221,6 +246,9 @@ public class SnakeGame {
         snake = new Snake(midX, midY);
         world = new int[NUMBER_X][NUMBER_Y];
         gameOver = false;
+        numberOFEatenFood = 0;
+        numberOfFood = 1;
+        score = 0;
         generateFood();
         setDirection(RIGHT);
         addGameObjects();
@@ -252,9 +280,12 @@ public class SnakeGame {
                 food = foods.remove(i);
                 snake.eat(food.getX(), food.getY());
                 generateFood();
-                //  FAIRE AUGMENTER LE SCORE ET LE LEVEL
-                //  TOUT LES 10 LEVEL, AUGMENTE LE NOMBRE
-                //  DE FOOD DE 1
+                numberOFEatenFood++;
+                if (numberOFEatenFood % 10 == 0) {
+                    numberOfFood++;
+                }
+                increaseScore();
+                System.out.println(score);
             }
         }
 

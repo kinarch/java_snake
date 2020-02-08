@@ -8,7 +8,7 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame snakeFrame = new SnakeFrame();
+            SnakeFrame snakeFrame = new SnakeFrame();
             snakeFrame.setVisible(true);
         });
     }
