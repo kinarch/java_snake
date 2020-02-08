@@ -154,8 +154,6 @@ public class SnakeGame {
 
     private void addGameObjects() {
 
-        world = new int[NUMBER_X][NUMBER_Y];
-
         //  is snake is out of world ?
         try {
             for (SnakeTail s : snake.getBody()) {
@@ -239,6 +237,7 @@ public class SnakeGame {
         numberOFEatenFood = 0;
         numberOfFood = 1;
         score = 0;
+        world = new int[NUMBER_X][NUMBER_Y];
         foods = new ArrayList<>();
         snake = new Snake(midX, midY);
         generateFood();
@@ -292,6 +291,7 @@ public class SnakeGame {
             }
         }
 
+        world = new int[NUMBER_X][NUMBER_Y];
         addGameObjects();
     }
 
