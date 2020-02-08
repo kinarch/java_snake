@@ -27,7 +27,7 @@ public class SnakeFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
         setResizable(false);
-        setUndecorated(false);
+        setUndecorated(true);
         setFocusable(true);
 
         //  #   PANE
@@ -42,8 +42,6 @@ public class SnakeFrame extends JFrame {
 
         //  #   GAME
         newGame();
-
-        pack();
 
         //  #   KEYBOARD
         addKeyListener(new KeyAdapter() {
@@ -82,32 +80,6 @@ public class SnakeFrame extends JFrame {
                 draw();
             }
         });
-
-        Thread thread = new Thread(() -> {
-//            try {
-//                while (!snakeGame.isGameOver()) {
-//                    Thread.sleep(500);
-//                    //System.out.println("sleep");
-//                    snakeGame.update();
-//                    this.draw();
-//                }
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            while (!snakeGame.isGameOver()) {
-//                try {
-//                    Thread.sleep(200);
-//                    //System.out.println("sleep");
-//                    snakeGame.update();
-//                    draw();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                    return;
-//                }
-//            }
-        });
-        thread.start();
-
     }
 
     private void draw() {
@@ -118,7 +90,7 @@ public class SnakeFrame extends JFrame {
 
         //  remove and draw...
         board.removeAll();
-        board.repaint(1000);
+        board.repaint();
 
         for (int x = 0; x < snakeWorld.length; x++) {
             for (int y = 0; y < snakeWorld[x].length; y++) {
@@ -126,6 +98,7 @@ public class SnakeFrame extends JFrame {
                     JLabel rect = new JLabel();
                     rect.setSize(new Dimension(rectSize, rectSize));
                     rect.setBounds(x * rectSize, y * rectSize, rectSize, rectSize);
+                    rect.setOpaque(true);
                     switch (snakeWorld[x][y]) {
                         case 1:
                             rect.setBackground(Color.RED);
@@ -134,7 +107,6 @@ public class SnakeFrame extends JFrame {
                             rect.setBackground(Color.CYAN);
                             break;
                     }
-                    rect.setOpaque(true);
                     board.add(rect);
                 }
             }
@@ -178,5 +150,21 @@ public class SnakeFrame extends JFrame {
     public void newGame() {
         snakeGame.init();
         draw();
+    }
+
+    public void tic() {
+        Thread thread = new Thread(() -> {
+            while (!snakeGame.isGameOver()) {
+                try {
+                    Thread.sleep(200);
+                    snakeGame.update();
+                    draw();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+        });
+        thread.start();
     }
 }
