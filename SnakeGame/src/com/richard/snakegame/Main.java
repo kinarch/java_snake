@@ -11,7 +11,7 @@ public class Main {
             SnakeFrame snakeFrame = new SnakeFrame();
             snakeFrame.pack();
             snakeFrame.setVisible(true);
-            snakeFrame.tic();
+//            snakeFrame.tic();
         });
     }
 }
