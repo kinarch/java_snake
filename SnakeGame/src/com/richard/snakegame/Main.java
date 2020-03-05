@@ -1,6 +1,5 @@
 package com.richard.snakegame;
 
-import com.richard.snakegame.logic.SnakeGame;
 import com.richard.snakegame.view.SnakeFrame;
 
 import javax.swing.*;
@@ -11,7 +10,7 @@ public class Main {
             SnakeFrame snakeFrame = new SnakeFrame();
             snakeFrame.pack();
             snakeFrame.setVisible(true);
-//            snakeFrame.tic();
+            snakeFrame.tic();
         });
     }
 }

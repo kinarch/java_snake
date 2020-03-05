@@ -5,6 +5,7 @@ import com.richard.snakegame.logic.objects.Snake;
 import com.richard.snakegame.logic.objects.SnakeTail;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SnakeGame {
 
@@ -19,7 +20,7 @@ public class SnakeGame {
     /**
      * To create the int[][] world
      */
-    public final int NUMBER_X = 30;
+    public final int NUMBER_X = 20;
     public final int NUMBER_Y = 20;
 
     /**
@@ -72,7 +73,7 @@ public class SnakeGame {
      * If is true, pause the game
      * If is false, resume the game
      */
-    private boolean pause;
+    private boolean run;
 
     /**
      * the score is increasing after the snake eat food
@@ -125,7 +126,7 @@ public class SnakeGame {
     //  =   =   =   GAME TOOLS
 
     /**
-     *  set the next direction of the snake
+     * set the next direction of the snake
      */
     public void setDirection(int direction) {
         switch (direction) {
@@ -223,6 +224,36 @@ public class SnakeGame {
         return gameOver;
     }
 
+    public boolean isWin() {
+        for (int[] x : world) {
+            if (Arrays.stream(x).anyMatch(y -> y == EMPTY)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void snakeCanPassTheBorder() {
+        for (SnakeTail s : snake.getBody()) {
+            int x = s.getX();
+            int y = s.getY();
+            if (x >= NUMBER_X) x = 0;
+            if (x < 0) x = NUMBER_X - 1;
+            if (y >= NUMBER_Y) y = 0;
+            if (y < 0) y = NUMBER_Y - 1;
+            s.setPos(x, y);
+        }
+    }
+
+    private boolean isSnakeIsOutOfBorder() {
+        int x = snake.getHead().getX();
+        int y = snake.getHead().getY();
+        return x >= NUMBER_X
+                || x < 0
+                || y >= NUMBER_Y
+                || y < 0;
+    }
+
     //  =   =   =   GAME LYFE CYCLE
 
     /**
@@ -234,6 +265,7 @@ public class SnakeGame {
         int midY = (int) (NUMBER_Y / 2) - 1;
 
         gameOver = false;
+        run = true;
         numberOFEatenFood = 0;
         numberOfFood = 1;
         score = 0;
@@ -250,26 +282,22 @@ public class SnakeGame {
      */
     public void update() {
 
-        if (isGameOver()) {
+        if (isGameOver() || !run) {
+            return;
+        }
+
+        if (isWin()) {
+            System.out.println("win");
             return;
         }
 
         currentDirection = nextDirection;
         snake.move(currentDirection);
 
-        //  snake can pass the border
-        for (SnakeTail s : snake.getBody()) {
-            int x = s.getX();
-            int y = s.getY();
-            if (x >= NUMBER_X) x = 0;
-            if (x < 0) x = NUMBER_X - 1;
-            if (y >= NUMBER_Y) y = 0;
-            if (y < 0) y = NUMBER_Y - 1;
-            s.setPos(x, y);
-        }
+        //  snakeCanPassTheBorder();
 
         //  is snake eating his tail ?
-        if (snake.isOnHisTail()) {
+        if (snake.isOnHisTail() || isSnakeIsOutOfBorder()) {
             putGameOver();
             return;
         }
@@ -281,6 +309,18 @@ public class SnakeGame {
                 //  remove food, generate new food, increase score
                 food = foods.remove(i);
                 snake.eat(food.getX(), food.getY());
+                //                {
+                //                    boolean win = true;
+                //                    for (int x = 0; x < world.length; x++) {
+                //                        for (int y = 0; y < world[x].length; y++) {
+                //                            if (world[x][y] == EMPTY) {
+                //                                win = false;
+                //                            }
+                //                        }
+                //                    }
+                //                    if (win) System.out.println("win");
+                //                    if (win) return;
+                //                }
                 generateFood();
                 numberOFEatenFood++;
                 if (numberOFEatenFood % 10 == 0) {
@@ -290,15 +330,15 @@ public class SnakeGame {
                 System.out.println(score);
             }
         }
-
         world = new int[NUMBER_X][NUMBER_Y];
         addGameObjects();
+
     }
 
     /**
      * The loop game
      */
-    public void play() {
-        // while(true) update();
+    public void pause() {
+        run = !run;
     }
 }

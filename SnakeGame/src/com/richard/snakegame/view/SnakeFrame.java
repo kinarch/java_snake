@@ -27,7 +27,6 @@ public class SnakeFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
         setResizable(false);
-        setUndecorated(true);
         setFocusable(true);
 
         //  #   PANE
@@ -63,21 +62,13 @@ public class SnakeFrame extends JFrame {
                         direction = snakeGame.UP;
                         break;
                     case KeyEvent.VK_SPACE:
-//                        snakeGame.pause();
+                        snakeGame.pause();
                         break;
                 }
 
                 if (direction != 0) {
                     snakeGame.setDirection(direction);
                 }
-
-                /*
-                    ...
-                    A CHANGER ...
-                    ...
-                 */
-                snakeGame.update();
-                draw();
             }
         });
     }
@@ -86,15 +77,20 @@ public class SnakeFrame extends JFrame {
 
 
         int[][] snakeWorld = snakeGame.getWorld();
-        // snakeGame.displayWorldRepresentation();
+//        snakeGame.displayWorldRepresentation();
+//        System.out.println("------------------------------------------------------------------------------------------------------------");
 
         //  remove and draw...
         board.removeAll();
-        board.repaint();
+        board.updateUI();
+
+        int value = 0;
 
         for (int x = 0; x < snakeWorld.length; x++) {
             for (int y = 0; y < snakeWorld[x].length; y++) {
                 if (snakeWorld[x][y] != 0) {
+
+                    value++;
                     JLabel rect = new JLabel();
                     rect.setSize(new Dimension(rectSize, rectSize));
                     rect.setBounds(x * rectSize, y * rectSize, rectSize, rectSize);
@@ -111,6 +107,7 @@ public class SnakeFrame extends JFrame {
                 }
             }
         }
+        board.updateUI();
 
         if (snakeGame.isGameOver()) {
             JLabel message = new JLabel("GAME OVER", SwingConstants.CENTER);
@@ -149,7 +146,7 @@ public class SnakeFrame extends JFrame {
 
     public void newGame() {
         snakeGame.init();
-        draw();
+        tic();
     }
 
     public void tic() {
